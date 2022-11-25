@@ -1,0 +1,26 @@
+name: Production Pipeline
+
+on: 
+  create
+
+jobs:
+  refactor-project-name:
+    name: Refactor Project Name    
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Get repository name
+        id: repo-name
+        uses: MariachiBear/get-repo-name-action@v1.1.0
+        with:
+          string-case: 'lowercase'
+        
+      - name: Run Refactor
+        run: |
+          sed -i 's/${template.project_name}/${{ steps.repo-name.outputs.repository-name }}/g' *
+      
+      - name: Git Commit/Push Changes
+        uses: actions-x/commit@v1
+
+          
+    
